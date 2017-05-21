@@ -68,7 +68,7 @@ def run(args):
         output_file = './' + output_file
 
     if not os.path.isdir(output_dir):
-        print("The directory " + output_dir + " does not exist, exiting.")
+        print(("The directory " + output_dir + " does not exist, exiting."))
         sys.exit(1)
 
     print("Reading settings.json...")
@@ -88,7 +88,7 @@ def run(args):
     # Fetch data.
     request_url = GOOGLE_CALENDAR_API + settings['calendar_id'] + "/events"
     request_params = {'key': settings['google_api_key'], 'orderBy': 'startTime', 'singleEvents': 'true', 'timeMin': start_date, 'timeMax': end_date}
-    print("Reading calendar events for week starting {}...".format(next_monday.strftime("%Y-%m-%d")))
+    print(("Reading calendar events for week starting {}...".format(next_monday.strftime("%Y-%m-%d"))))
     api_response = requests.get(request_url, params=request_params)
     if api_response.status_code != 200:
         print("Error fetching calendar data from Google, check your network connection and API key.\
@@ -123,13 +123,13 @@ def run(args):
         with open(text_file_path, 'r') as special_file:
             special_text_lines = special_file.readlines()
     except FileNotFoundError:
-        print("Error: special text file " + text_file_path + " cannot be found, the PDF cannot be generated. Exiting.")
+        print(("Error: special text file " + text_file_path + " cannot be found, the PDF cannot be generated. Exiting."))
         sys.exit(1)
 
     latex_formatting = utils.settings_to_formatting(settings)
     latex_formatting['week_number'] = str(week_number)
     event_content = ""
-    for day, day_events in events_organised.items():
+    for day, day_events in list(events_organised.items()):
 
         if len(day_events) < 1:
             continue
@@ -171,19 +171,19 @@ def run(args):
 
         if result_code == 0:
             success = True
-            print("Success! PDF saved at: " + latex_target_path[:-4] + ".pdf")
+            print(("Success! PDF saved at: " + latex_target_path[:-4] + ".pdf"))
         else:
-            print("Failure! Check " + latex_target_path[:-4] + ".log for details.")
+            print(("Failure! Check " + latex_target_path[:-4] + ".log for details."))
     except subprocess.TimeoutExpired:
-        print("Failure! Something has made XeLaTeX to wait. Check " + latex_target_path[:-4] + ".log for details.")
+        print(("Failure! Something has made XeLaTeX to wait. Check " + latex_target_path[:-4] + ".log for details."))
 
     if not success:
         sys.exit(1)
 
-    print("Copying PDF to " + output_file)
+    print(("Copying PDF to " + output_file))
     p = subprocess.Popen(['cp', latex_target_path[:-4] + ".pdf", output_file], stdout=subprocess.PIPE, cwd=os.getcwd())
     result_code = p.returncode
-    print("PDF should have been copied to: " + output_file)
+    print(("PDF should have been copied to: " + output_file))
 
 if __name__ == '__main__':
     run(sys.argv)

@@ -32,7 +32,7 @@ def read_config(config_file_path):
 
     if config_file_path is None or not os.path.isfile(config_file_path):
         print("Warning: I cannot find the configuration file.")
-        print("Using the default configuration file at " + str(default_config_file))
+        print(("Using the default configuration file at " + str(default_config_file)))
         print("Please find an example config file at Docs/settings-example.json, and use --config= to specify your config file.")
         config_file = default_config_file
     else:
@@ -95,7 +95,7 @@ def tex_escape(text):
         '<': r'\textless',
         '>': r'\textgreater',
     }
-    regex = re.compile('|'.join(re.escape(str(key)) for key in sorted(conv.keys(), key = lambda item: - len(item))))
+    regex = re.compile('|'.join(re.escape(str(key)) for key in sorted(list(conv.keys()), key = lambda item: - len(item))))
     return regex.sub(lambda match: conv[match.group()], str(text))
 
 
@@ -107,7 +107,7 @@ def settings_to_formatting(settings):
     """
 
     formatting = {}
-    for key, val in settings.items():
+    for key, val in list(settings.items()):
 
         if key == "logo":
             if val.startswith('tex/'):

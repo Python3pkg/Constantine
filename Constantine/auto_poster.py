@@ -66,10 +66,10 @@ def run():
     week_number = int((next_monday - term_start).days / 7 + 1)
 
     if (1 <= week_number <= 10):
-        print("Running Constantine for Week " + str(week_number) + ".")
+        print(("Running Constantine for Week " + str(week_number) + "."))
         p = subprocess.Popen(['python', 'main.py', output_file, "--date=" + date_param, "--text=" + text_file_path, "--config=" + config_file_path], stdout=subprocess.PIPE, cwd=constantine_directory)
         output = p.communicate(timeout=MAIN_TIMEOUT)
-        print("Finished with code " + str(p.returncode))
+        print(("Finished with code " + str(p.returncode)))
         sys.exit(p.returncode) # Exit with the same code for monitoring purposes.
     else:
         print("Not term time, not updating the PDF.")
